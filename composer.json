@@ -1,12 +1,29 @@
 {
-    "name": "m0xy/cms",
-    "description": "fast categories, pages and urls fetch for Laravel",
-    "authors": [
-        {
-            "name": "Dima Kornev",
-            "email": "dimakornev13@yandex.ru"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {}
+  "name": "m0xy/cms",
+  "description": "fast categories, pages and urls fetch for Laravel",
+  "authors": [
+    {
+      "name": "Dima Kornev",
+      "email": "dimakornev13@yandex.ru"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "M0xy\\Cms\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "M0xy\\Cms\\Providers\\CmsProvider"
+      ]
+    }
+  }
 }
