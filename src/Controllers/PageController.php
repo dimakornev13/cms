@@ -39,22 +39,7 @@ class PageController extends Controller
     {
         $page = Page::findOrFail($url->entity_id);
 
-        if(isset($page->parameters->is_ticket))
-            return view('ticket', [
-                'entity' => $page
-            ]);
-        elseif(isset($page->parameters->is_exam))
-            return $this->exam($page);
-
         return view('page', [
-            'entity' => $page
-        ]);
-    }
-
-    private function exam(Page $page){
-        $page->tickets = TicketService::getQuestions($page);
-
-        return view('exam', [
             'entity' => $page
         ]);
     }
