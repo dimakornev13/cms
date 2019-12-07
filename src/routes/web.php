@@ -1,4 +1,7 @@
 <?php
 
-Route::get('/', \M0xy\Cms\Controllers\PageController::class . '@index');
-Route::get('{url}', \M0xy\Cms\Controllers\PageController::class . '@handle')->where('url', '[0-9a-zA-Z\-\/_]+');
+
+Route::group([], function () {
+    Route::get('/', 'PageController@index');
+    Route::get('{uri}', 'PageController@handle')->where('uri', '[0-9a-zA-Z\-\/_]+');
+});

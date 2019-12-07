@@ -23,7 +23,7 @@ class Page extends Model
         if (!is_string($value))
             $value = Json::encode($value);
 
-        $this->attributes['parameters'] = preg_replace('#\s{2,}#', '', $value);
+        $this->attributes['parameters'] = preg_replace('#\s{2,}#', ' ', $value);
     }
 
 
@@ -37,11 +37,5 @@ class Page extends Model
     {
         return $this->hasOne(Uri::class, 'entity_id', 'id')
             ->where('type', Uri::TYPE_PAGE);
-    }
-
-
-    public function tickets()
-    {
-        return $this->hasMany(Ticket::class, 'ticket_id');
     }
 }

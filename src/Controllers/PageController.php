@@ -3,7 +3,6 @@
 namespace M0xy\Cms\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Services\TicketService;
 use M0xy\Cms\Models\Category;
 use M0xy\Cms\Models\Page;
 use M0xy\Cms\Models\Uri;
@@ -13,18 +12,16 @@ class PageController extends Controller
 
     public function index()
     {
-        $page = Page::where('slug', '/')->firstOrFail();
+        //$page = Page::where('slug', '/')->firstOrFail();
 
-        return view('page', [
-            'entity' => $page
+        return view('index', [
+            //'entity' => $page
         ]);
     }
 
 
-    public function handle($url)
+    public function handle(Uri $url)
     {
-        $uri = Uri::where('uri', $url)->firstOrFail();
-
         switch ($uri->type) {
             case Uri::TYPE_PAGE:
                 return $this->page($uri);
@@ -48,7 +45,6 @@ class PageController extends Controller
     private function category(Uri $url)
     {
         $entity = Category::where('id', $url->entity_id)->firstOrFail();
-        $tickets = Page::with('uri')->where('category_id', $entity->id)->get();
 
         return view('category', [
             'entity' => $entity,

@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Uri extends Model
 {
+    const TYPE_PAGE = 10;
+
+    const TYPE_PAGES_CATEGORY = 20;
 
     protected $table = 'urls';
 
@@ -13,8 +16,9 @@ class Uri extends Model
 
     public $timestamps = false;
 
-    const TYPE_PAGE = 10;
-    const TYPE_PAGES_CATEGORY = 20;
-    const TYPE_PRODUCT = 30;
-    const TYPE_PRODUCTS_CATEGORY = 40;
+
+    public function getRouteKeyName()
+    {
+        return 'uri';
+    }
 }
