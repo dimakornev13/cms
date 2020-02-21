@@ -18,6 +18,9 @@ class Page extends Model
     ];
 
 
+    /**
+     * @param $value
+     */
     public function setParametersAttribute($value)
     {
         if (!is_string($value))
@@ -27,12 +30,32 @@ class Page extends Model
     }
 
 
+    /**
+     * Get main Category for this model
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function category()
     {
         return $this->hasOne(Category::class, 'id', 'category_id');
     }
 
 
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
+
+    /**
+     * Get Uri Model associated with this model
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function uri()
     {
         return $this->hasOne(Uri::class, 'entity_id', 'id')

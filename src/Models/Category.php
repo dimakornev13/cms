@@ -22,6 +22,20 @@ class Category extends Model
     }
 
 
+    /**
+     * Get Pages via pivot table for this category
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function pages(){
+        return $this->hasMany(Page::class);
+    }
+
+    /**
+     * Get Uri Model assciated with this model
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function uri()
     {
         return $this->hasOne(Uri::class, 'entity_id', 'id')

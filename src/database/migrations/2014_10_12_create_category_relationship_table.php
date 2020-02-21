@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UrisTable extends Migration
+class CategoryRelationshipTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,14 +15,10 @@ class UrisTable extends Migration
     {
         Schema::create($this->getTable(), function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('uri')->unique()->default('');
-            $table->unsignedTinyInteger('type')->default(0);
-            $table->unsignedBigInteger('entity_id')->default(0);
 
+            $table->unsignedInteger('category_id')->index();
+            $table->unsignedInteger('page_id')->index();
         });
-
-        if(!app()->environment('testing'))
-            \Illuminate\Support\Facades\DB::statement('ALTER TABLE `urls` ADD INDEX `urls` (`entity_id`, `type`) using HASH;');
     }
 
     /**
@@ -36,6 +32,6 @@ class UrisTable extends Migration
     }
 
     private function getTable(){
-        return 'urls';
+        return 'category_page';
     }
 }

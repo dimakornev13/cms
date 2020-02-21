@@ -14,13 +14,18 @@ use M0xy\Cms\Models\Uri;
 class UriService
 {
 
+    /**
+     * Generate Uri for page and save it
+     *
+     * @param Page $page
+     */
     public static function makeUri(Page $page)
     {
         static::delete($page);
 
         try {
             Uri::create([
-                'uri' => self::getUri($page),
+                'uri' => static::getUri($page),
                 'entity_id' => $page->id,
                 'type' => Uri::TYPE_PAGE
             ]);
@@ -31,7 +36,14 @@ class UriService
     }
 
 
-    private static function getUri(Page $page)
+    /**
+     * Return Uri for page
+     *
+     * @param Page $page
+     *
+     * @return string
+     */
+    private static function getUri(Page $page): string
     {
         return $page->category_id > 0
             ? $page->category->uri->uri . '/' . $page->slug

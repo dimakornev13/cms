@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
 use M0xy\Cms\Models\Category;
+use M0xy\Cms\Models\Page;
 use M0xy\Cms\Models\Uri;
 use Tests\TestCase;
 
@@ -15,12 +16,6 @@ class CategoryTest extends TestCase
 
     use RefreshDatabase;
 
-
-    /**
-     * A basic unit test example.
-     *
-     * @return void
-     */
 
     public function test_category_saving_event()
     {
@@ -42,6 +37,7 @@ class CategoryTest extends TestCase
 
         $this->assertEquals(Uri::where('uri', $category->slug)->count(), 1);
     }
+
 
     public function test_category_slug()
     {
@@ -104,4 +100,23 @@ class CategoryTest extends TestCase
         $this->assertEquals($expectedUri, $entity->uri->uri);
     }
 
+
+    public function test_category_multiple_pages(){
+        $category = Category::create([
+            'meta_title' => 'category'
+        ]);
+
+        $page1 = Page::create([
+            'meta_title' => 'page1'
+        ]);
+
+        $page2 = Page::create([
+            'meta_title' => 'page2'
+        ]);
+
+        $page1->categories()->attach($category->id);
+        $page2->categories()->attach($category->id);
+
+        $this->assertEquals(2, count($category->pages));
+    }
 }

@@ -4,18 +4,18 @@ namespace Tests\Unit;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\DB;
+use M0xy\Cms\Models\Category;
 use M0xy\Cms\Models\Page;
 use M0xy\Cms\Models\Uri;
 use Tests\TestCase;
 
 class PageTest extends TestCase
 {
+
     use RefreshDatabase;
-    /**
-     * A basic unit test example.
-     *
-     * @return void
-     */
+
+
     public function test_page_saving_event()
     {
         $page = Page::create([
@@ -37,19 +37,21 @@ class PageTest extends TestCase
         $this->assertEquals(Uri::where('uri', $page->slug)->count(), 1);
     }
 
-    //public function test_pages_categories()
-    //{
-    //    $categories = factory(Category::class, 3)->create();
-    //    $page = factory(Page::class)->create();
-    //
-    //    collect($categories)->map(function ($category) use ($page){
-    //        PagesCategory::create([
-    //            'category_id' => $category->id,
-    //            'page_id' => $page->id
-    //        ]);
-    //    });
-    //
-    //    $this->assertEquals(3, PagesCategory::all()->count());
-    //}
 
+    public function test_pages_categories()
+    {
+        $category = Category::create([
+            'meta_title' => 'тест и вторая строка'
+        ]);
+
+        $page = Page::create([
+            'meta_title' => 'тест и вторая строка',
+            'category_id' => $category->id
+        ]);
+
+        $page->categories()->attach($category->id);
+
+        $this->assertEquals($category->id, $page->category_id);
+        $this->assertEquals(1, count($page->categories));
+    }
 }
