@@ -3,6 +3,7 @@
 namespace M0xy\Cms\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use M0xy\Cms\Console\InstallCommand;
 use M0xy\Cms\Models\Category;
 use M0xy\Cms\Models\Page;
 use M0xy\Cms\Models\Uri;
@@ -32,6 +33,12 @@ class CmsProvider extends ServiceProvider
      */
     public function boot()
     {
+        if($this->app->runningInConsole()){
+            $this->commands([
+                InstallCommand::class
+            ]);
+        }
+
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         Page::observe(PageObserver::class);
