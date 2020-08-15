@@ -25,7 +25,7 @@ class TableCategory extends Migration
             $table->unsignedInteger('parent_id')->default(1)->nullable();
             $table->unsignedSmallInteger('level')->default(1)->nullable();
             $table->unsignedInteger('sort')->default(500)->nullable();
-            $table->longText('content')->default('')->nullable();
+            $table->longText('content')->nullable();
 
             $table->timestamps();
         });

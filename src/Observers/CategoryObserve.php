@@ -1,18 +1,33 @@
 <?php
 
-namespace M0xy\Cms\Observers;
+namespace App\Observers;
 
-use M0xy\Cms\Models\Category;
-use M0xy\Cms\Services\Category\CategoryGeneratePath;
-use M0xy\Cms\Services\Category\UriService;
-use M0xy\Cms\Services\CommonObserve;
+use App\Models\Category;
+use App\Services\Cms\Category\CategoryGeneratePath;
+use App\Services\Cms\Category\UriService;
+use App\Services\Cms\CommonObserve;
 
 class CategoryObserve
 {
+    private $commonObserve;
+    private $uriService;
+    private $categoryGeneratePath;
+
+    public function __construct(
+        CommonObserve $commonObserve,
+        UriService $uriService,
+        CategoryGeneratePath $categoryGeneratePath
+    )
+    {
+        $this->commonObserve = $commonObserve;
+        $this->uriService = $uriService;
+        $this->categoryGeneratePath = $categoryGeneratePath;
+    }
+
     /**
      * Handle the category "created" event.
      *
-     * @param  \App\Models\Category  $category
+     * @param \App\Models\Category $category
      * @return void
      */
     public function created(Category $category)
@@ -21,42 +36,45 @@ class CategoryObserve
         $category->save();
     }
 
-    public function saving(Category $category){
-        CommonObserve::checkSlug($category);
-
-        //if(UriService::exists($category))
-        //    return false;
+    /**
+     * @param Category $category
+     */
+    public function saving(Category $category)
+    {
+        $this->commonObserve->checkSlug($category);
     }
 
     /**
      * Handle the category "updated" event.
      *
-     * @param  \App\Models\Category  $category
+     * @param \App\Models\Category $category
      * @return void
      */
     public function updated(Category $category)
     {
-        UriService::makeUri($category);
+        $this->uriService->makeUri($category);
     }
 
-    public function updating(Category $category){
-        CategoryGeneratePath::process($category);
+    public function updating(Category $category)
+    {
+        $this->categoryGeneratePath->process($category);
     }
+
     /**
      * Handle the category "deleted" event.
      *
-     * @param  \App\Models\Category  $category
+     * @param \App\Models\Category $category
      * @return void
      */
     public function deleted(Category $category)
     {
-        UriService::delete($category);
+        $this->uriService->delete($category);
     }
 
     /**
      * Handle the category "restored" event.
      *
-     * @param  \App\Models\Category  $category
+     * @param \App\Models\Category $category
      * @return void
      */
     public function restored(Category $category)
@@ -67,7 +85,7 @@ class CategoryObserve
     /**
      * Handle the category "force deleted" event.
      *
-     * @param  \App\Models\Category  $category
+     * @param \App\Models\Category $category
      * @return void
      */
     public function forceDeleted(Category $category)

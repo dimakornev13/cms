@@ -1,31 +1,33 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ema
- * Date: 11/2/19
- * Time: 4:26 PM
- */
 
-namespace M0xy\Cms\Services\Page;
+namespace App\Services\Cms\Page;
 
-use M0xy\Cms\Models\Page;
-use M0xy\Cms\Models\Uri;
+
+use App\Models\Page;
+use App\Models\Uri;
+use App\Repositories\UriRepository;
 
 class UriService
 {
+    private $urls;
+
+    public function __construct(UriRepository $urls)
+    {
+        $this->urls = $urls;
+    }
 
     /**
      * Generate Uri for page and save it
-     *
      * @param Page $page
      */
-    public static function makeUri(Page $page)
+    public function makeUri(Page $page)
     {
-        static::delete($page);
+
+        $this->delete($page);
 
         try {
-            Uri::create([
-                'uri' => static::getUri($page),
+            $this->urls->create([
+                'uri' => $this->getUri($page),
                 'entity_id' => $page->id,
                 'type' => Uri::TYPE_PAGE
             ]);
@@ -43,7 +45,7 @@ class UriService
      *
      * @return string
      */
-    private static function getUri(Page $page): string
+    private function getUri(Page $page): string
     {
         return $page->category_id > 0
             ? $page->category->uri->uri . '/' . $page->slug
@@ -51,17 +53,14 @@ class UriService
     }
 
 
-    public static function exists(Page $page)
+    public function exists(Page $page)
     {
-        return Uri::where('uri', self::getUri($page))->exists();
+        return $this->urls->exists($this->getUri($page));
     }
 
 
-    public static function delete(Page $page)
+    public function delete(Page $page)
     {
-        Uri::where([
-            ['entity_id', '=', $page->id],
-            ['type', '=', Uri::TYPE_PAGE]
-        ])->delete();
+        $this->urls->deletePage((int)$page->id);
     }
 }

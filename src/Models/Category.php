@@ -1,6 +1,6 @@
 <?php
 
-namespace M0xy\Cms\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Psy\Util\Json;
@@ -24,11 +24,11 @@ class Category extends Model
 
     /**
      * Get Pages via pivot table for this category
-     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function pages(){
-        return $this->hasMany(Page::class);
+    public function pages()
+    {
+        return $this->belongsToMany(Page::class);
     }
 
     /**

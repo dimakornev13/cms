@@ -3,14 +3,6 @@
 namespace M0xy\Cms\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use M0xy\Cms\Models\Category;
-use M0xy\Cms\Models\Page;
-use M0xy\Cms\Models\Uri;
-use M0xy\Cms\Observers\CategoryObserve;
-use M0xy\Cms\Observers\PageObserver;
-use M0xy\Cms\Observers\UriObserve;
-use M0xy\Cms\Voyager\FormFields\JsonFormField;
-use TCG\Voyager\Facades\Voyager;
 
 class CmsProvider extends ServiceProvider
 {
@@ -32,12 +24,18 @@ class CmsProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->publishes([
+            __DIR__ . '/../Controllers' => app_path('Http/Controllers'),
+            __DIR__ . '/../database/migrations' => database_path('migrations'),
+            __DIR__ . '/../Models' => app_path('Models'),
+            __DIR__ . '/../Observers' => app_path('Observers'),
+            __DIR__ . '/../Repositories' => app_path('Repositories'),
+            __DIR__ . '/../routes/web.php' => base_path('routes/cms.php'),
+            __DIR__ . '/../Services' => app_path('Services/Cms'),
+            __DIR__ . '/../Tests' => base_path('tests'),
+            __DIR__ . '/../Voyager' => app_path('Voyager'),
+            __DIR__ . '/../publishProviders' => app_path('Providers'),
+        ]);
 
-        Page::observe(PageObserver::class);
-        Category::observe(CategoryObserve::class);
-        Uri::observe(UriObserve::class);
-
-        Voyager::addFormField(JsonFormField::class);
     }
 }

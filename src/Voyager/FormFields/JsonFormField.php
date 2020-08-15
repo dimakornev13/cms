@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ema
- * Date: 11/3/19
- * Time: 12:46 PM
- */
 
-namespace M0xy\Cms\Voyager\FormFields;
+namespace App\Voyager\FormFields;
 
 
 use TCG\Voyager\FormFields\AbstractHandler;

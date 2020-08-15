@@ -1,8 +1,7 @@
 <?php
 
-namespace M0xy\Cms\Models;
+namespace App\Models;
 
-use App\Model\Ticket;
 use Illuminate\Database\Eloquent\Model;
 use Psy\Util\Json;
 

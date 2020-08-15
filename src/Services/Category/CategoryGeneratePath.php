@@ -1,26 +1,27 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ema
- * Date: 11/2/19
- * Time: 2:35 PM
- */
 
-namespace M0xy\Cms\Services\Category;
+namespace App\Services\Cms\Category;
 
 
-use M0xy\Cms\Models\Category;
+use App\Models\Category;
+use App\Repositories\CategoryRepository;
 
 class CategoryGeneratePath
 {
+    private $categories;
 
-    public static function process(Category $category)
+    public function __construct(CategoryRepository $categories)
+    {
+        $this->categories = $categories;
+    }
+
+    public function process(Category $category)
     {
         if (!$category->exists)
             return;
 
         try {
-            $parent = Category::findOrFail($category->parent_id);
+            $parent = $this->categories->findOrFail((int)$category->parent_id);
 
             $category->path = sprintf('%s%s,', $parent->path, $category->id);
             $category->level = $parent->level + 1;

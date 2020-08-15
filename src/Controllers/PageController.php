@@ -1,55 +1,61 @@
 <?php
 
-namespace M0xy\Cms\Controllers;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use M0xy\Cms\Models\Category;
-use M0xy\Cms\Models\Page;
-use M0xy\Cms\Models\Uri;
+use App\Models\Uri;
+use App\Repositories\CategoryRepository;
+use App\Repositories\PageRepository;
+use App\Repositories\UriRepository;
 
 class PageController extends Controller
 {
+    private $pages;
+    private $categories;
+    private $uri;
 
+    public function __construct(PageRepository $pages, CategoryRepository $categories, UriRepository $uri)
+    {
+        $this->pages = $pages;
+        $this->categories = $categories;
+        $this->uri = $uri;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
-        //$page = Page::where('slug', '/')->firstOrFail();
+        $page = $this->pages->getIndexPage();
 
-        return view('index', [
-            //'entity' => $page
-        ]);
+        return view('index', compact('page'));
     }
 
 
     public function handle(Uri $url)
     {
-        switch ($uri->type) {
+        switch ($url->type) {
             case Uri::TYPE_PAGE:
-                return $this->page($uri);
+                return $this->page($url);
 
             case Uri::TYPE_PAGES_CATEGORY:
-                return $this->category($uri);
+                return $this->category($url);
         }
     }
 
 
     private function page(Uri $url)
     {
-        $page = Page::findOrFail($url->entity_id);
+        $entity = $this->pages->findOrFail((int) $url->entity_id);
 
-        return view('page', [
-            'entity' => $page
-        ]);
+        return view('page', compact('entity'));
     }
 
 
     private function category(Uri $url)
     {
-        $entity = Category::where('id', $url->entity_id)->firstOrFail();
+        $entity = $this->categories->findOrFail((int) $url->entity_id);
 
-        return view('category', [
-            'entity' => $entity,
-            'tickets' => $tickets
-        ]);
+        return view('category', compact('entity'));
     }
 
 

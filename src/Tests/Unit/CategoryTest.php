@@ -3,12 +3,11 @@
 namespace Tests\Unit;
 
 
+use App\Models\Category;
+use App\Models\Page;
+use App\Models\Uri;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
-use M0xy\Cms\Models\Category;
-use M0xy\Cms\Models\Page;
-use M0xy\Cms\Models\Uri;
 use Tests\TestCase;
 
 class CategoryTest extends TestCase
@@ -55,7 +54,7 @@ class CategoryTest extends TestCase
             'meta_title' => 'тест и вторая строка'
         ]);
 
-        $this->assertEquals(',1,', $entity->path);
+        $this->assertEquals(','.$entity->id.',', $entity->path);
         $this->assertEquals(Str::slug($entity->meta_title), $entity->uri->uri);
     }
 
@@ -72,7 +71,7 @@ class CategoryTest extends TestCase
         ]);
 
 
-        $this->assertEquals(',1,2,', $entity->path);
+        $this->assertEquals(sprintf(',%d,%d,', $parent->id, $entity->id), $entity->path);
         $this->assertEquals(Str::slug($parent->meta_title) . '/' . Str::slug($entity->meta_title), $entity->uri->uri);
 
     }
@@ -96,7 +95,9 @@ class CategoryTest extends TestCase
 
         $expectedUri = Str::slug($parent1->meta_title) . '/' . Str::slug($parent2->meta_title) . '/' . Str::slug($entity->meta_title);
 
-        $this->assertEquals(',1,2,3,', $entity->path);
+        $expectedPath = sprintf(',%s,%s,%s,', $parent1->id, $parent2->id, $entity->id);
+
+        $this->assertEquals($expectedPath, $entity->path);
         $this->assertEquals($expectedUri, $entity->uri->uri);
     }
 

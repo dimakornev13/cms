@@ -2,12 +2,12 @@
 
 namespace Tests\Unit;
 
+use App\Models\Category;
+use App\Models\Page;
+use App\Models\Uri;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
-use M0xy\Cms\Models\Category;
-use M0xy\Cms\Models\Page;
-use M0xy\Cms\Models\Uri;
 use Tests\TestCase;
 
 class PageTest extends TestCase

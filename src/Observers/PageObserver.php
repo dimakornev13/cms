@@ -1,14 +1,22 @@
 <?php
 
-namespace M0xy\Cms\Observers;
+namespace App\Observers;
 
 
-use M0xy\Cms\Models\Page;
-use M0xy\Cms\Services\CommonObserve;
-use M0xy\Cms\Services\Page\UriService;
+use App\Models\Page;
+use App\Services\Cms\CommonObserve;
+use App\Services\Cms\Page\UriService;
 
 class PageObserver
 {
+    private $uriService;
+    private $commonObserve;
+
+    public function __construct(UriService $uriService, CommonObserve $commonObserve)
+    {
+        $this->uriService = $uriService;
+        $this->commonObserve = $commonObserve;
+    }
 
     /**
      * Handle the page "created" event.
@@ -16,14 +24,13 @@ class PageObserver
      */
     public function created(Page $page)
     {
-        UriService::makeUri($page);
+        $this->uriService->makeUri($page);
     }
 
 
     public function saving(Page $page)
     {
-        CommonObserve::checkSlug($page);
-
+        $this->commonObserve->checkSlug($page);
     }
 
 
@@ -34,7 +41,7 @@ class PageObserver
      */
     public function updated(Page $page)
     {
-        UriService::makeUri($page);
+        $this->uriService->makeUri($page);
     }
 
 
@@ -47,7 +54,7 @@ class PageObserver
      */
     public function deleted(Page $page)
     {
-        UriService::delete($page);
+        $this->uriService->delete($page);
     }
 
 

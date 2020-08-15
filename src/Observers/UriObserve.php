@@ -1,17 +1,16 @@
 <?php
 
-namespace M0xy\Cms\Observers;
+namespace App\Observers;
 
 
-use M0xy\Cms\Models\Uri;
-use M0xy\Cms\Services\UriCommon;
+use App\Models\Uri;
 
 class UriObserve
 {
     /**
      * Handle the uri "created" event.
      *
-     * @param  \App\Models\Uri  $uri
+     * @param \App\Models\Uri $uri
      * @return void
      */
     public function created(Uri $uri)
@@ -19,14 +18,16 @@ class UriObserve
         //
     }
 
-    public function saving(Uri $uri){
-        UriCommon::deleteByEntityId($uri);
+
+    public function saving(Uri $uri)
+    {
+        //
     }
 
     /**
      * Handle the uri "updated" event.
      *
-     * @param  \App\Models\Uri  $uri
+     * @param \App\Models\Uri $uri
      * @return void
      */
     public function updated(Uri $uri)
@@ -37,7 +38,7 @@ class UriObserve
     /**
      * Handle the uri "deleted" event.
      *
-     * @param  \App\Models\Uri  $uri
+     * @param \App\Models\Uri $uri
      * @return void
      */
     public function deleted(Uri $uri)
@@ -48,7 +49,7 @@ class UriObserve
     /**
      * Handle the uri "restored" event.
      *
-     * @param  \App\Models\Uri  $uri
+     * @param \App\Models\Uri $uri
      * @return void
      */
     public function restored(Uri $uri)
@@ -59,7 +60,7 @@ class UriObserve
     /**
      * Handle the uri "force deleted" event.
      *
-     * @param  \App\Models\Uri  $uri
+     * @param \App\Models\Uri $uri
      * @return void
      */
     public function forceDeleted(Uri $uri)

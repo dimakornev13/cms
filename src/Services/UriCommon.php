@@ -6,30 +6,36 @@
  * Time: 4:27 PM
  */
 
-namespace M0xy\Cms\Services;
+namespace App\Services\Cms;
 
-use M0xy\Cms\Models\Uri;
+
+use App\Repositories\UriRepository;
 
 class UriCommon
 {
-    public static function deleteByEntityId($entity){
-        Uri::where([
-            ['entity_id', '=', $entity->id],
-            ['type', '=', $entity->type]
-        ])->delete();
+    private $urls;
+
+    public function __construct(UriRepository $urls)
+    {
+        $this->urls = $urls;
     }
 
-
-    private static function getType($entity){
-        $types = [
-            'page' => Uri::TYPE_PAGE,
-            'category' => Uri::TYPE_PAGES_CATEGORY,
-            'product' => Uri::TYPE_PRODUCT,
-        ];
-
-        $type = collect(explode('\\', get_class($entity)))->last();
-        $type = strtolower($type);
-
-        return $types[$type];
-    }
+//    public function deleteByEntityId($entity)
+//    {
+//        $this->urls->delete((int) $entity->id, (int) $entity->type);
+//    }
+//
+//
+//    private function getType($entity)
+//    {
+//        $types = [
+//            'page' => Uri::TYPE_PAGE,
+//            'category' => Uri::TYPE_PAGES_CATEGORY,
+//        ];
+//
+//        $type = collect(explode('\\', get_class($entity)))->last();
+//        $type = strtolower($type);
+//
+//        return $types[$type];
+//    }
 }

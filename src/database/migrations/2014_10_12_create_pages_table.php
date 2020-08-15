@@ -21,10 +21,10 @@ class PagesTable extends Migration
             $table->string('meta_description')->default('');
             $table->string('meta_keywords')->default('');
             $table->string('h1')->default('');
-            $table->longText('content')->default('')->nullable();
+            $table->longText('content')->nullable();
             $table->string('slug')->default('')->nullable();
             $table->string('category_id')->default(0)->nullable();
-            $table->json('parameters')->default('{}')->nullable();
+            $table->json('parameters')->nullable();
 
             $table->timestamps();
         });
