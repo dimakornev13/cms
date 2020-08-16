@@ -25,4 +25,12 @@ class CommonRepository
     {
         return $this->entity->create($data);
     }
+
+    /**
+     * @return object
+     */
+    public function getEntity(): object
+    {
+        return $this->entity;
+    }
 }

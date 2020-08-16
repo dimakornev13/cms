@@ -25,6 +25,8 @@ class CmsProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
+            __DIR__ . '/../Console' => app_path('Console/Commands'),
+            __DIR__ . '/../Middleware' => app_path('Http/Middleware'),
             __DIR__ . '/../Controllers' => app_path('Http/Controllers'),
             __DIR__ . '/../database/migrations' => database_path('migrations'),
             __DIR__ . '/../Models' => app_path('Models'),

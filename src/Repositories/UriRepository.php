@@ -18,14 +18,6 @@ class UriRepository extends CommonRepository
     }
 
     /**
-     * @return string
-     */
-    public static function getEntity(): string
-    {
-        return Uri::class;
-    }
-
-    /**
      * @param string $uri
      * @return bool
      */

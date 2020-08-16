@@ -6,8 +6,6 @@ use App\Models\Page;
 
 class PageRepository extends CommonRepository
 {
-    private $entity;
-
     /**
      * PageRepository constructor.
      * @param Page $entity
