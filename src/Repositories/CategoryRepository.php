@@ -17,13 +17,4 @@ class CategoryRepository extends CommonRepository
         $this->entity = $entity;
     }
 
-    /**
-     * @return string
-     */
-    public static function getEntity(): string
-    {
-        return Category::class;
-    }
-
-
 }

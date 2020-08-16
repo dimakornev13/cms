@@ -48,15 +48,4 @@ class UriRepository extends CommonRepository
         ])->delete();
     }
 
-//    /**
-//     * @param int $id
-//     * @param int $type
-//     */
-//    public function delete(int $id, int $type)
-//    {
-//        $this->entity->where([
-//            ['entity_id', '=', $id],
-//            ['type', '=', $type]
-//        ])->delete();
-//    }
 }

@@ -16,14 +16,6 @@ class PageRepository extends CommonRepository
     }
 
     /**
-     * @return string
-     */
-    public static function getEntity(): string
-    {
-        return Page::class;
-    }
-
-    /**
      * @return Page
      */
     public function getIndexPage(): Page
