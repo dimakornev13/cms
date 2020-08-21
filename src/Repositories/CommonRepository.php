@@ -12,9 +12,9 @@ class CommonRepository
      * @param int $id
      * @return mixed
      */
-    public function findOrFail(int $id)
+    public function findOrFail($id)
     {
-        return $this->entity->findOrFail($id);
+        return $this->entity->findOrFail((int)$id);
     }
 
     /**

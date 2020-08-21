@@ -11,19 +11,21 @@ class HtmlMinify
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
-         if(
-             !App::environment('production')
-             || !$request->isMethod('GET')
-             || stripos($request->path(), 'order/') !== false){
+        if (
+            !App::environment('production')
+            || !$request->isMethod('GET')
+            || stripos($request->path(), 'order/') !== false
+            || stripos($request->path(), 'ema-admin') !== false
+        ) {
 
-             return $next($request);
-         }
+            return $next($request);
+        }
 
         $response = $next($request);
 

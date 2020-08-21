@@ -60,8 +60,7 @@ class GenerateSitemap extends Command
                 if ($uri->url === '/')
                     return;
 
-                $url = url($uri->url);
-
+                $url = url($uri->uri);
                 $date = $this->carbon::now()->toAtomString();
 
                 $sitemapContent .= sprintf('<url><loc>%s</loc><priority>1.0</priority><lastmod>%s</lastmod></url>', $url, $date);
