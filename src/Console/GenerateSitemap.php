@@ -57,7 +57,7 @@ class GenerateSitemap extends Command
             $offset += $urls->count();
 
             $urls->each(function ($uri) use (&$sitemapContent) {
-                if ($uri->url === '/')
+                if ($uri->uri === '/')
                     return;
 
                 $url = url($uri->uri);
