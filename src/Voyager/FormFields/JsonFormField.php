@@ -13,7 +13,7 @@ class JsonFormField extends AbstractHandler
 
     public function createContent($row, $dataType, $dataTypeContent, $options)
     {
-        return view('formfields.json', [
+        return view('voyager::formfields.text_area', [
             'row' => $row,
             'options' => $options,
             'dataType' => $dataType,
