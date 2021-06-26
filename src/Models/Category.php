@@ -7,30 +7,15 @@ use Psy\Util\Json;
 
 /**
  * Class Category
- * @property string $meta_title
- * @property string $meta_description
- * @property string $meta_keywords
- * @property string $h1
- * @property string $content
- * @property string $slug
- * @property object $parameters
  * @package App\Models
  */
 class Category extends Model
 {
+    use GetFields;
 
     protected $table = 'categories';
 
     protected $guarded = [];
-
-
-    public function setParametersAttribute($value)
-    {
-        if (!is_string($value))
-            $value = Json::encode($value);
-
-        $this->attributes['parameters'] = $value;
-    }
 
 
     /**
