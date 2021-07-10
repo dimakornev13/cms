@@ -25,9 +25,9 @@ class PageController extends Controller
      */
     public function index()
     {
-        $page = $this->pages->getIndexPage();
-
-        return view('index', compact('page'));
+        return view('index', [
+            'page' => $this->pages->getIndexPage()
+        ]);
     }
 
 
@@ -45,17 +45,17 @@ class PageController extends Controller
 
     private function page(Uri $url)
     {
-        $entity = $this->pages->findOrFail((int) $url->entity_id);
-
-        return view('page', compact('entity'));
+        return view('page', [
+            'entity' => $this->pages->findOrFail((int)$url->entity_id)
+        ]);
     }
 
 
     private function category(Uri $url)
     {
-        $entity = $this->categories->findOrFail((int) $url->entity_id);
-
-        return view('category', compact('entity'));
+        return view('category', [
+            'entity' => $this->categories->findOrFail((int)$url->entity_id)
+        ]);
     }
 
 
