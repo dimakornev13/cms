@@ -19,13 +19,13 @@ class TableCategory extends Migration
             $table->string('meta_title')->default('');
             $table->string('meta_description')->default('');
             $table->string('meta_keywords')->default('');
-            $table->string('h1')->default('')->nullable();
-            $table->string('slug')->default('')->nullable();
-            $table->string('path')->default('')->nullable();
-            $table->unsignedInteger('parent_id')->default(1)->nullable();
-            $table->unsignedSmallInteger('level')->default(1)->nullable();
-            $table->unsignedInteger('sort')->default(500)->nullable();
-            $table->longText('content')->nullable();
+            $table->string('h1')->default('');
+            $table->string('slug')->default('');
+            $table->string('path')->default('');
+            $table->unsignedInteger('parent_id')->default(0)->index();
+            $table->unsignedSmallInteger('level')->default(1);
+            $table->unsignedInteger('sort')->default(500);
+            $table->longText('content');
 
             $table->timestamps();
         });
