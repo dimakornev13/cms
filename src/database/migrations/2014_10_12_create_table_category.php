@@ -16,12 +16,12 @@ class TableCategory extends Migration
         Schema::create($this->getTable(), function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->string('meta_title')->default('');
-            $table->string('meta_description')->default('');
-            $table->string('meta_keywords')->default('');
-            $table->string('h1')->default('');
-            $table->string('slug')->default('');
-            $table->string('path')->default('');
+            $table->string('meta_title')->nullable();
+            $table->string('meta_description')->nullable();
+            $table->string('meta_keywords')->nullable();
+            $table->string('h1')->nullable();
+            $table->string('slug')->nullable();
+            $table->string('path')->nullable();
             $table->unsignedInteger('parent_id')->default(0)->index();
             $table->unsignedSmallInteger('level')->default(1);
             $table->unsignedInteger('sort')->default(500);

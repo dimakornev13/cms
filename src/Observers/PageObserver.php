@@ -10,12 +10,10 @@ use App\Services\Cms\Page\UriService;
 class PageObserver
 {
     private $uriService;
-    private $commonObserve;
 
-    public function __construct(UriService $uriService, CommonObserve $commonObserve)
+    public function __construct(UriService $uriService)
     {
         $this->uriService = $uriService;
-        $this->commonObserve = $commonObserve;
     }
 
     /**
@@ -30,7 +28,6 @@ class PageObserver
 
     public function saving(Page $page)
     {
-        $this->commonObserve->checkSlug($page);
     }
 
 
@@ -41,7 +38,6 @@ class PageObserver
      */
     public function updated(Page $page)
     {
-        $this->uriService->makeUri($page);
     }
 
 

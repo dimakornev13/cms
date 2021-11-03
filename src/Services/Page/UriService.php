@@ -22,9 +22,6 @@ class UriService
      */
     public function makeUri(Page $page)
     {
-
-        $this->delete($page);
-
         try {
             $this->urls->create([
                 'uri' => $this->getUri($page),

@@ -5,21 +5,17 @@ namespace App\Observers;
 use App\Models\Category;
 use App\Services\Cms\Category\CategoryGeneratePath;
 use App\Services\Cms\Category\UriService;
-use App\Services\Cms\CommonObserve;
 
 class CategoryObserve
 {
-    private $commonObserve;
     private $uriService;
     private $categoryGeneratePath;
 
     public function __construct(
-        CommonObserve $commonObserve,
         UriService $uriService,
         CategoryGeneratePath $categoryGeneratePath
     )
     {
-        $this->commonObserve = $commonObserve;
         $this->uriService = $uriService;
         $this->categoryGeneratePath = $categoryGeneratePath;
     }
@@ -32,8 +28,7 @@ class CategoryObserve
      */
     public function created(Category $category)
     {
-        // fire updating for path generating
-        $category->save();
+        $this->categoryGeneratePath->process($category);
     }
 
     /**
@@ -41,7 +36,6 @@ class CategoryObserve
      */
     public function saving(Category $category)
     {
-        $this->commonObserve->checkSlug($category);
     }
 
     /**
@@ -52,12 +46,10 @@ class CategoryObserve
      */
     public function updated(Category $category)
     {
-        $this->uriService->makeUri($category);
     }
 
     public function updating(Category $category)
     {
-        $this->categoryGeneratePath->process($category);
     }
 
     /**
