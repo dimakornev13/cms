@@ -2,8 +2,7 @@
 
 namespace App\Services\Logs;
 
-use DB;
-use Monolog\Logger;
+use Illuminate\Support\Facades\DB;
 use Monolog\Handler\AbstractProcessingHandler;
 
 class MysqlHandler extends AbstractProcessingHandler
