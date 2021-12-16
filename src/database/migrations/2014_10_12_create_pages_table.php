@@ -23,7 +23,10 @@ class PagesTable extends Migration
             $table->string('h1')->nullable();
             $table->longText('content')->nullable();
             $table->string('slug')->nullable();
-            $table->unsignedInteger('category_id')->default(0)->index();
+            $table->string('path')->nullable();
+            $table->unsignedInteger('parent_id')->default(0)->index();
+            $table->unsignedSmallInteger('level')->default(1);
+            $table->string('url')->unique();
             $table->text('parameters')->default('{}');
 
             $table->timestamps();
@@ -44,6 +47,6 @@ class PagesTable extends Migration
 
     private function getTable()
     {
-        return 'pages';
+        return (new \App\Models\Page())->getTable();
     }
 }

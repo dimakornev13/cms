@@ -11,41 +11,64 @@ use Psy\Util\Json;
  */
 class Page extends Model
 {
-    use GetFields;
-
     protected $table = 'pages';
 
     protected $guarded = [];
 
-    /**
-     * Get main Category for this model
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function category()
+    protected $casts = [
+        'parameters' => 'object'
+    ];
+
+    function getId()
     {
-        return $this->hasOne(Category::class, 'id', 'category_id');
+        return $this->id;
     }
 
-
-    /**
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-     */
-    public function categories()
+    function getMetaTitle()
     {
-        return $this->belongsToMany(Category::class);
+        return $this->meta_title;
     }
 
+    function getMetaDescription()
+    {
+        return $this->meta_description;
+    }
+
+    function getH1()
+    {
+        return $this->h1;
+    }
+
+    function getContent()
+    {
+        return $this->content;
+    }
+
+    function getSlug()
+    {
+        return $this->slug;
+    }
+
+    function getParentId()
+    {
+        return $this->parent_id;
+    }
+
+    function getPath()
+    {
+        return $this->path;
+    }
 
     /**
-     * Get Uri Model associated with this model
-     *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function uri()
+    function parent()
     {
-        return $this->hasOne(Uri::class, 'entity_id', 'id')
-            ->where('type', Uri::TYPE_PAGE);
+        return $this->hasOne(self::class, 'id', 'parent_id');
+    }
+
+    function getUrl()
+    {
+        return $this->url;
     }
 }

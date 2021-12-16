@@ -2,12 +2,9 @@
 
 namespace Tests\Unit;
 
-use App\Models\Category;
 use App\Models\Page;
-use App\Models\Uri;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class PageTest extends TestCase
@@ -15,43 +12,44 @@ class PageTest extends TestCase
 
     use RefreshDatabase;
 
-
-    public function test_page_saving_event()
+    /**
+     * @return void
+     */
+    public function test_page_during_saving_generate_all_necessary_fields()
     {
+        $metaTitle = "какой-то мета заголовок";
+        $h1 = "какой-то текст";
+
+        /** @var Page $page */
         $page = Page::create([
-            'meta_title' => 'тест и вторая строка'
+            'meta_title' => $metaTitle,
+            'h1' => $h1,
         ]);
 
-        $uri = Uri::where('uri', $page->slug)->first();
-
-        $this->assertEquals('test-i-vtoraya-stroka', $page->slug);
-        $this->assertTrue($uri instanceof Uri);
-        $this->assertEquals($uri->uri, $page->slug);
-        $this->assertEquals($uri->type, Uri::TYPE_PAGE);
-        $this->assertEquals($uri->entity_id, $page->id);
-
-        $page->update([
-            'meta_title' => 'тест и вторая строка'
-        ]);
-
-        $this->assertEquals(Uri::where('uri', $page->slug)->count(), 1);
+        $this->assertNotEmpty($page->getSlug());
+        $this->assertNotEmpty($page->getUrl());
+        $this->assertEquals($page->getSlug(), Str::slug($metaTitle));
     }
 
-
-    public function test_pages_categories()
+    /**
+     * @return void
+     */
+    function test_page_success_hierarchy_generation()
     {
-        $category = Category::create([
-            'meta_title' => 'тест и вторая строка'
+        $metaParentTitle = 'родитель';
+        $metaChildTitle = 'потомок';
+
+        /** @var Page $parent */
+        $parent = Page::create([
+            'meta_title' => $metaParentTitle,
         ]);
 
-        $page = Page::create([
-            'meta_title' => 'тест и вторая строка',
-            'category_id' => $category->id
+        /** @var Page $child */
+        $child = Page::create([
+            'meta_title' => $metaChildTitle,
+            'parent_id' => $parent->getId()
         ]);
 
-        $page->categories()->attach($category->id);
-
-        $this->assertEquals($category->id, $page->category_id);
-        $this->assertEquals(1, count($page->categories));
+        $this->assertEquals($child->getUrl(), "{$parent->getUrl()}/{$child->getSlug()}");
     }
 }

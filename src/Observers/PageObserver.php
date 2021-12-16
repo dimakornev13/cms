@@ -2,19 +2,11 @@
 
 namespace App\Observers;
 
-
 use App\Models\Page;
-use App\Services\Cms\CommonObserve;
-use App\Services\Cms\Page\UriService;
+use Illuminate\Support\Str;
 
 class PageObserver
 {
-    private $uriService;
-
-    public function __construct(UriService $uriService)
-    {
-        $this->uriService = $uriService;
-    }
 
     /**
      * Handle the page "created" event.
@@ -22,12 +14,13 @@ class PageObserver
      */
     public function created(Page $page)
     {
-        $this->uriService->makeUri($page);
     }
 
 
     public function saving(Page $page)
     {
+        $this->checkSlug($page);
+        $this->generateHierarchy($page);
     }
 
 
@@ -50,7 +43,6 @@ class PageObserver
      */
     public function deleted(Page $page)
     {
-        $this->uriService->delete($page);
     }
 
 
@@ -77,5 +69,32 @@ class PageObserver
     public function forceDeleted(Page $page)
     {
         //
+    }
+
+    private function checkSlug($entity)
+    {
+        if (empty($entity->slug))
+            $entity->slug = Str::slug(!empty($entity->meta_title) ? $entity->meta_title : $entity->h1);
+    }
+
+    private function generateHierarchy(Page $page)
+    {
+        if ($page->getOriginal('slug') == $page->getSlug() && $page->getParentId() == 0)
+            return;
+
+        $parent = $page->parent;
+
+        $page->url = $parent
+            ? "{$parent->getUrl()}/{$page->getSlug()}"
+            : $page->getSlug();
+
+        $page->path = $parent
+            ? ",{$parent->getPath()}{$page->getId()},"
+            : ",{$page->getId()},";
+
+        $page->level = count(explode('/', $page->getUrl())) + 1;
+
+        // todo handle when parent's slug|path has been changed
+
     }
 }

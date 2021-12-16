@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Repositories\UriRepository;
+use App\Models\Page;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
@@ -23,21 +23,24 @@ class GenerateSitemap extends Command
      */
     protected $description = 'Generate sitemap';
 
-    private $urls;
+    protected $currentSitemap = 1;
+
+    protected $sitemapLimit = 50000;
+
     private $storage;
+
     private $carbon;
 
     /**
      * GenerateSitemap constructor.
-     * @param UriRepository $urls
      * @param Carbon $carbon
      */
-    public function __construct(UriRepository $urls, Carbon $carbon)
+    public function __construct(Carbon $carbon)
     {
         parent::__construct();
 
-        $this->urls = $urls;
         $this->carbon = $carbon;
+        $this->storage = Storage::disk('public');
     }
 
     /**
@@ -47,34 +50,63 @@ class GenerateSitemap extends Command
      */
     public function handle()
     {
-        $offset = 0;
-        $limit = 1000;
-        $sql = $this->urls->getEntity();
-        $sitemapContent = '';
+        $lastId = 0;
+        $query = Page::query();
+
+        $this->bar = $this->output->createProgressBar($query->count());
 
         do {
-            $urls = $sql->offset($offset)->limit($limit)->get();
-            $offset += $urls->count();
+            $set = $query->select(['url'])
+                ->where('id', '>', $lastId)
+                ->limit($limit)
+                ->get()
+                ->each(function (Page $page) {
+                    $this->sitemapContent[] = url($page->getUrl());
+                    $this->checkContentLimit();
+                    $this->bar->advance();
+                });
 
-            $urls->each(function ($uri) use (&$sitemapContent) {
-                if ($uri->uri === '/')
-                    return;
+            $lastId = $set->last()->getId();
+        } while ($set->count() === $limit);
 
-                $url = url($uri->uri);
-                $date = $this->carbon::now()->toAtomString();
+        $this->writeCurrentSitemap();
 
-                $sitemapContent .= sprintf('<url><loc>%s</loc><priority>1.0</priority><lastmod>%s</lastmod></url>', $url, $date);
-            });
-        } while ($urls->count() === $limit);
-
-        $sitemapContent = sprintf('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">%s</urlset>', $sitemapContent);
-
-        Storage::disk('public')->put('ema_sitemap.xml', $sitemapContent);
-
-        $this->info(sprintf('%d pages have been published', $offset));
+        $this->writeSitemapIndex();
+        $this->bar->finish();
 
         return 0;
     }
 
+    protected function clearSitemaps()
+    {
+        $this->storage->deleteDirectory('sitemap');
+    }
 
+
+    protected function checkContentLimit()
+    {
+        if (count($this->sitemapContent) < $this->sitemapLimit)
+            return;
+
+        $this->writeCurrentSitemap();
+    }
+
+    private function writeCurrentSitemap()
+    {
+        $this->storage->put("sitemap/profile{$this->currentSitemap}.txt", collect($this->sitemapContent)->implode("\n"));
+        $this->sitemapContent = [];
+        $this->currentSitemap++;
+    }
+
+    protected function writeSitemapIndex()
+    {
+        $files = collect($this->storage->files('sitemap'))->map(function ($i) {
+            $url = url("storage/{$i}");
+
+            return "<sitemap><loc>{$url}</loc></sitemap>";
+        })->implode('');
+
+        $files = sprintf('<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">%s</sitemapindex>', $files);
+        Storage::disk('public')->put("sitemap/sitemap_index.xml", $files);
+    }
 }

@@ -35,8 +35,6 @@ class CmsPublishProvider extends ServiceProvider
     public function boot()
     {
         Page::observe(PageObserver::class);
-        Category::observe(CategoryObserve::class);
-        Uri::observe(UriObserve::class);
 
         Voyager::addFormField(JsonFormField::class);
     }
