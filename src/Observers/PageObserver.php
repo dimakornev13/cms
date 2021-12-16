@@ -14,6 +14,7 @@ class PageObserver
      */
     public function created(Page $page)
     {
+        $this->generatePath($page);
     }
 
 
@@ -82,19 +83,25 @@ class PageObserver
         if ($page->getOriginal('slug') == $page->getSlug() && $page->getParentId() == 0)
             return;
 
+        /** @var Page $parent */
         $parent = $page->parent;
 
-        $page->url = $parent
+        $page->url = $parent !== null
             ? "{$parent->getUrl()}/{$page->getSlug()}"
             : $page->getSlug();
 
-        $page->path = $parent
-            ? ",{$parent->getPath()}{$page->getId()},"
-            : ",{$page->getId()},";
-
-        $page->level = count(explode('/', $page->getUrl())) + 1;
+        $page->level = $parent !== null ? $parent->getLevel() + 1 : 1;
 
         // todo handle when parent's slug|path has been changed
+    }
 
+    private function generatePath(Page $page)
+    {
+        /** @var Page $parent */
+        $parent = $page->parent;
+
+        $page->update([
+            'path' => $parent !== null ? "{$parent->getPath()}{$page->getId()}," : ",{$page->getId()},"
+        ]);
     }
 }

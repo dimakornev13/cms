@@ -71,4 +71,14 @@ class Page extends Model
     {
         return $this->url;
     }
+
+    function region()
+    {
+        return $this->parameters->region;
+    }
+
+    function getLevel()
+    {
+        return $this->level;
+    }
 }
