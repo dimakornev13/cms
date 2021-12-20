@@ -41,4 +41,24 @@ class CmsProvider extends ServiceProvider
 
 
     }
+
+    private function addMysqlHandler(){
+        $configPath = config_path('logging.php');
+        $configContent = file_get_contents($configPath);
+
+        if(mb_stripos($configContent, 'MysqlHandler') == false){
+            $handler = <<<EMA
+'channels' => [
+        'mysql' => [
+            'driver' => 'monolog',
+            'handler' => \App\Services\Logs\MysqlHandler::class
+        ],
+
+EMA;
+
+            $configContent = preg_replace("#('channels' => \[\s)#U", $handler, $configContent);
+
+            file_put_contents($configPath, $configContent);
+        }
+    }
 }
