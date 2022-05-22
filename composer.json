@@ -9,7 +9,7 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "moxyrus/voyager": ">=1.5.1"
+    "tcg/voyager": ">=1.5.1"
   },
   "autoload": {
     "psr-4": {
